@@ -1,0 +1,44 @@
+/* src/components/MenuItemCard.css */
+
+.menu-item-card {
+  background-color: var(--color-surface); /* Use the white color from our global styles */
+  border: 1px solid var(--color-border);    /* Add a subtle border */
+  border-radius: 8px;                       /* Give it nice rounded corners */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);/* A softer shadow */
+  padding: 1.5rem;                          /* Add internal spacing */
+  display: flex;                            /* Use flexbox for robust internal layout */
+  flex-direction: column;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.menu-item-card:hover {
+  transform: translateY(-5px); /* Add a little "lift" effect on hover */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0; /* Adjust spacing */
+  color: var(--color-text-primary);
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary); /* Use global secondary text color */
+  margin: 0 0 1.5rem 0; /* Add space between text and button */
+  flex-grow: 1; /* This makes the text area expand to fill space */
+}
+
+/* Let's make the button look a bit nicer */
+.add-to-cart-btn {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  align-self: flex-start; /* Align button to the left */
+}
+
+.add-to-cart-btn:hover {
+  opacity: 0.85;
+}

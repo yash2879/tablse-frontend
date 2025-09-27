@@ -1,0 +1,58 @@
+/* src/index.css */
+
+/* 1. Global Variables (Theming) */
+:root {
+  /* Fonts */
+  --font-family-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  
+  /* Colors - A simple, clean palette */
+  --color-background: #f8f9fa; /* A very light, soft gray */
+  --color-surface: #ffffff;    /* For cards and other surfaces */
+  --color-text-primary: #212529; /* A dark, readable black */
+  --color-text-secondary: #6c757d; /* A muted gray for subtext */
+  --color-primary: #4e73df;      /* Your app's main brand color (blue) */
+  --color-border: #dee2e6;       /* A light border color */
+}
+
+/* 2. Global Reset and Defaults */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* Makes layout math much more intuitive */
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-sans);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 3. Basic Element Styling */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+a:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  transition: border-color 0.25s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+}

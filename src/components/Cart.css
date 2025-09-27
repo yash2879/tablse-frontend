@@ -1,0 +1,116 @@
+/* src/components/Cart.css */
+
+.cart-container {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.cart-container h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cart-items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  gap: 1rem;
+}
+
+.cart-item + .cart-item {
+  border-top: 1px solid #f0f0f0; /* Lighter separator for items */
+}
+
+.item-name {
+  flex-grow: 1; /* Allows the name to take up available space */
+  font-weight: 500;
+}
+
+.item-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.item-quantity {
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
+
+.item-subtotal {
+  font-weight: 500;
+  min-width: 80px;
+  text-align: right;
+}
+
+/* Styling for the buttons */
+.increment-btn,
+.decrement-btn,
+.remove-btn {
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  color: var(--color-text-primary);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.increment-btn,
+.decrement-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%; /* Make them circles */
+  padding: 0;
+  line-height: 28px;
+  text-align: center;
+}
+
+.remove-btn {
+  background-color: #fff6f6;
+  border-color: #e74a3b;
+  color: #e74a3b;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+}
+
+.increment-btn:hover,
+.decrement-btn:hover {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.remove-btn:hover {
+  background-color: #e74a3b;
+  color: white;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 1rem 0;
+}
+
+.cart-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  color: var(--color-text-primary);
+}
