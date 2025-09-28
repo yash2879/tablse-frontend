@@ -1,8 +1,9 @@
 // src/App.jsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import MenuItemCard from './components/MenuItemCard';
 import Cart from './components/Cart';
+import Notification from './components/Notification';
 import './App.css';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -29,6 +31,15 @@ function App() {
     };
     fetchMenuItems();
   }, []);
+
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
 
   const handleAddToCart = (itemToAdd) => {
     const existingItem = cart.find(item => item.id === itemToAdd.id);
@@ -60,15 +71,9 @@ function App() {
 
   const handlePlaceOrder = async () => {
     if (cart.length === 0) {
-      alert("Your cart is empty!");
+      setNotification({message: "Your cart is empty!", type: "error"});
       return;
     }
-    // @NotNull Long restaurantId,
-    // @NotBlank String tableNumber,
-    // @NotEmpty @Valid List<OrderItemRequest> items
-    // public record OrderItemRequest(
-    // @NotNull Long menuItemId,
-    // @NotNull @Min(1) Integer quantity
     const orderPayload = {
       restaurantId: 1, // Hardcoded for now
       tableNumber: "A1", // Hardcoded for now
@@ -89,14 +94,28 @@ function App() {
         throw new Error('Order could not be placed!');
       }
       const data = await response.json();
-      alert("Order placed successfully!");
+      setNotification({message: "Order placed successfully!", type: "success"});
       setCart([]); // Clear cart after successful order
     } catch (error) {
-      alert(error.message);
+      setNotification({message: error.message, type: "error"});
     }
   }
 
+  const clearNotification = () => {
+    setNotification(null);
+  };
+
   return (
+    <>
+    <div className="notification-container">
+    {notification && 
+      <Notification 
+        notification={notification} 
+        onClose={clearNotification} 
+      />
+    }
+    </div> 
+
     <div className="app-container">
       <div className="main-content">
         <h1 className="menu-title">Our Menu</h1>
@@ -128,6 +147,7 @@ function App() {
         />
       </div>
     </div>
+    </>
   );
 }
 

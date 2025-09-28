@@ -1,0 +1,66 @@
+/* src/components/Notification.css */
+
+.notification-container {
+  /* This will position the container at the top center of the screen */
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000; /* Ensures it's on top of other content */
+  width: 90%;
+  max-width: 400px;
+}
+
+.notification {
+  color: white;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  /* Add a nice fade-in animation */
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.notification.success {
+  background-color: #28a745; /* A nice, friendly green */
+}
+
+.notification.error {
+  background-color: #dc3545; /* A clear, but not jarring, red */
+}
+
+.notification-message {
+  flex-grow: 1;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: white;
+  opacity: 0.7;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0 0 1rem;
+  transition: opacity 0.2s;
+}
+
+.close-button:hover {
+  opacity: 1;
+}
+
+/* Keyframe animation for the fade-in effect */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
