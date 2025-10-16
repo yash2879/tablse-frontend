@@ -1,0 +1,106 @@
+/* src/components/OrderCard.css */
+
+.order-card {
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    /* Slightly more rounded corners */
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-left: 5px solid;
+    /* The colored status indicator */
+    padding: 1rem 1.5rem;
+    /* More horizontal padding */
+}
+
+/* Color-coding for the left border */
+.order-card.status-new {
+    border-left-color: #f6c23e;
+}
+
+.order-card.status-preparing {
+    border-left-color: #36b9cc;
+}
+
+.order-card.status-completed {
+    border-left-color: #1cc88a;
+}
+
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Vertically align the text */
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #f0f0f0;
+    /* Subtle separator line */
+}
+
+.table-number {
+    margin: 0;
+    font-size: 1.25rem;
+    /* Slightly larger table number */
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.time-ago {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+/* The item list will have less emphasis */
+.order-item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem 0;
+}
+
+.order-item-list li {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    /* Smaller font size for the item list */
+    padding: 0.1rem 0;
+    color: var(--color-text-secondary);
+}
+
+.item-quantity {
+    font-weight: 600;
+}
+
+.order-card-actions {
+    margin-top: 0;
+    /* Remove top margin */
+}
+
+/* Action Buttons - simplified to match the screenshot */
+.action-button {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    /* Match card's border-radius */
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+
+.action-button:hover {
+    filter: brightness(90%);
+    /* A modern alternative to changing the color */
+}
+
+.action-button.status-preparing {
+    background-color: #36b9cc;
+}
+
+.action-button.status-completed {
+    background-color: #1cc88a;
+}
+
+.action-button.status-archived {
+    background-color: #858796;
+}

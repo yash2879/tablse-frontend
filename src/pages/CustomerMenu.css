@@ -1,0 +1,42 @@
+/* src/App.css */
+.menu-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--color-text-primary);
+}
+
+/* A grid layout for our menu cards */
+.menu-list {
+  display: grid;
+  /* This creates a responsive grid that adds more columns as space becomes available */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px; /* The space between cards */
+}
+
+
+.loading-message, .error-message {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
+  color: var(--color-text-secondary);
+}
+
+.error-message {
+  color: #e74a3b; /* A standard error red */
+  font-weight: bold;
+}
+
+.app-container {
+  display: flex;
+  gap: 2rem;
+  max-width: 1400px;
+}
+
+.main-content {
+  flex: 3; /* Takes up 3/4 of the space */
+}
+
+.sidebar-content {
+  flex: 1; /* Takes up 1/4 of the space */
+  margin-top: 4.5rem; /* Aligns the top of the cart with the menu list */
+}

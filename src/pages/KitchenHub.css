@@ -1,0 +1,41 @@
+/* src/pages/KitchenHub.css */
+
+.kitchen-hub-container {
+    padding: 1.5rem;
+    font-family: var(--font-family-sans);
+}
+
+.connection-status {
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+/* Main Kanban Board Layout */
+.kanban-board {
+    display: flex;
+    gap: 1.5rem; /* Space between columns */
+    align-items: flex-start;
+}
+
+/* Styling for each column */
+.kanban-column {
+    flex: 1; /* Each column takes up equal space */
+    background-color: #f4f5f7; /* A light grey for the column background */
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.kanban-column-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--color-border);
+}
+
+.kanban-column-orders {
+    min-height: 70vh; /* Gives the columns a nice tall appearance */
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 0.5rem;
+}

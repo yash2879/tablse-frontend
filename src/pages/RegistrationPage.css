@@ -1,0 +1,88 @@
+/* src/pages/RegistrationPage.css */
+
+.register-page-background {
+    background-color: #4e73df;
+    min-height: 100vh;
+    padding: 3rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.register-container {
+    max-width: 600px;
+    width: 100%;
+}
+
+.register-card {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,0.15);
+    padding: 3rem;
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.register-header h1 {
+    color: #5a5c69;
+    font-size: 1.8rem;
+}
+
+.form-section-title {
+    font-size: 1rem;
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+hr {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    border-top: 1px solid #e3e6f0;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 5rem;
+    border: 1px solid #d1d3e2;
+    font-size: 0.9rem;
+}
+
+.btn-register {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 5rem;
+    background-color: #4e73df;
+    color: white;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-register:disabled {
+    background-color: #858796;
+}
+
+.register-footer {
+    text-align: center;
+}
+
+/* Re-using the same error style from login */
+.alert-error {
+    padding: 1rem;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}

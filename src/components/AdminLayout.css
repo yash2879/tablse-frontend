@@ -1,0 +1,74 @@
+/* src/components/AdminLayout.css */
+.admin-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.header-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: #4e73df;
+}
+
+.header-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.btn-logout {
+    background-color: #e74a3b;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.admin-main-content {
+    flex-grow: 1;
+    /* This makes the main content area fill the available space */
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem; /* Space between the brand and the nav links */
+}
+
+/* Styling for the navigation section */
+.header-nav {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.header-nav-link {
+    text-decoration: none;
+    color: #5a5c69; /* Muted text color */
+    font-weight: 500;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent; /* Prepare for the active state underline */
+    transition: color 0.2s, border-bottom-color 0.2s;
+}
+
+.header-nav-link:hover {
+    color: var(--color-primary);
+}
+
+/* This is the magic of NavLink: the 'active' class */
+.header-nav-link.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary); /* Underline the active link */
+}
