@@ -3,6 +3,19 @@
 // 1. Get the base URL from the environment variable
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// Logger utility
+const logger = {
+    request: (method, path, body) => {
+        console.log(`🚀 API Request: ${method} ${path}`, body ? '\nBody:', body : '');
+    },
+    response: (method, path, response) => {
+        console.log(`✅ API Response: ${method} ${path}`, '\nResponse:', response);
+    },
+    error: (method, path, error) => {
+        console.error(`❌ API Error: ${method} ${path}`, '\nError:', error);
+    }
+};
+
 // A helper function to handle fetch requests
 const fetchApi = async (path, options = {}) => {
     // 2. Get the auth token from localStorage
@@ -19,6 +32,9 @@ const fetchApi = async (path, options = {}) => {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
+    // Log the request
+    logger.request(options.method || 'GET', path, options.body ? JSON.parse(options.body) : null);
+
     // 4. Construct the full URL and make the request
     const response = await fetch(`${API_BASE_URL}${path}`, {
         ...options,
@@ -29,18 +45,26 @@ const fetchApi = async (path, options = {}) => {
     if (!response.ok) {
         // Try to parse the error message from the backend, or use a default
         const errorData = await response.json().catch(() => ({ message: response.statusText }));
-        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+        const error = new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+        logger.error(options.method || 'GET', path, error);
+        throw error;
     }
 
+    let responseData;
     // Handle different successful status codes
     switch (response.status) {
         case 204: // No Content
-            return null;
+            responseData = null;
+            break;
         case 201: // Created
-            return response.json().catch(() => null); // Some APIs might not return body with 201
+            responseData = await response.json().catch(() => null);
+            break;
         default:  // 200 OK and others
-            return response.json();
+            responseData = await response.json();
     }
+
+    logger.response(options.method || 'GET', path, responseData);
+    return responseData;
 };
 
 // --- Define your API methods ---

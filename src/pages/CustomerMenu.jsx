@@ -4,7 +4,6 @@ import Cart from '../components/Cart';
 import Notification from '../components/Notification';
 import { getMenuItems, placeOrder } from '../services/apiClient';
 import './CustomerMenu.css';
-import { useAuth } from '../context/AuthContext';
 import { useParams } from 'react-router-dom';
 
 function CustomerMenu() {
