@@ -67,8 +67,8 @@ const KitchenHub = () => {
         if (!clientRef.current) {
             console.log("Creating new STOMP client instance...");
             const client = new Client({
-                // The key change: connect directly to the WebSocket URL
-                brokerURL: 'ws://localhost:8080/ws',
+                // Get WebSocket URL from environment variables
+                brokerURL: import.meta.env.VITE_WEBSOCKET_URL,
                 debug: (str) => console.log(new Date(), str),
                 reconnectDelay: 5000,
                 onConnect: onConnect,
