@@ -4,7 +4,11 @@ import { useState, useEffect } from 'react';
 
 // A helper function to calculate the time difference string
 const formatTimeAgo = (date) => {
-    const seconds = Math.floor((new Date() - date) / 1000);
+    // date variable
+    const now = new Date();
+    // descriptive log
+    console.log(`Calculating time ago for date: ${date} (current time: ${now})`);
+    const seconds = Math.floor((now - date) / 1000);
     let interval = seconds / 31536000;
     if (interval > 1) return Math.floor(interval) + " years ago";
     interval = seconds / 2592000;
