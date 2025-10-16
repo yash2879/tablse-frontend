@@ -6,13 +6,13 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 // Logger utility
 const logger = {
     request: (method, path, body) => {
-        console.log(`🚀 API Request: ${method} ${path}`, body ? '\nBody:', body : '');
+        console.log(`🚀 API Request: ${method} ${path}${body ? `\nBody: ${JSON.stringify(body, null, 2)}` : ''}`);
     },
     response: (method, path, response) => {
-        console.log(`✅ API Response: ${method} ${path}`, '\nResponse:', response);
+        console.log(`✅ API Response: ${method} ${path}\nResponse:`, response);
     },
     error: (method, path, error) => {
-        console.error(`❌ API Error: ${method} ${path}`, '\nError:', error);
+        console.error(`❌ API Error: ${method} ${path}\nError:`, error);
     }
 };
 
