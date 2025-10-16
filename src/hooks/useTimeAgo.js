@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 
 // A helper function to calculate the time difference string
 const formatTimeAgo = (date) => {
-    // date variable
     const now = new Date();
+    
     // descriptive log
     console.log(`Calculating time ago for date: ${date} (current time: ${now}) \n difference in seconds: ${(now - date) / 1000} \n difference: ${(now - date)}`);
     const seconds = Math.floor((now - date) / 1000);
@@ -24,6 +24,7 @@ const formatTimeAgo = (date) => {
 
 // The custom hook
 const useTimeAgo = (timestamp) => {
+    console.log("useTimeAgo called with timestamp:", timestamp);
     const [timeAgo, setTimeAgo] = useState(() => formatTimeAgo(new Date(timestamp)));
 
     useEffect(() => {
