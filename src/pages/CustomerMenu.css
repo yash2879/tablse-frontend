@@ -1,18 +1,12 @@
-/* src/App.css */
-.menu-title {
-  text-align: center;
-  margin-bottom: 2rem;
-  color: var(--color-text-primary);
+.customer-menu-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 8rem 1rem; /* Add a lot of bottom padding to avoid content being hidden by the FAB */
 }
 
-/* A grid layout for our menu cards */
-.menu-list {
-  display: grid;
-  /* This creates a responsive grid that adds more columns as space becomes available */
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px; /* The space between cards */
-}
-
+.menu-title { text-align: center; margin-bottom: 0.5rem; }
+.table-info { text-align: center; margin-bottom: 2rem; color: var(--color-text-secondary); }
+.menu-list { display: grid; gap: 1rem; }
 
 .loading-message, .error-message {
   text-align: center;
@@ -26,17 +20,76 @@
   font-weight: bold;
 }
 
-.app-container {
-  display: flex;
-  gap: 2rem;
-  max-width: 1400px;
+.cart-footer-fab {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-primary);
+    color: white;
+    padding: 1rem;
+    margin: 1rem; /* Adds space around the button */
+    border-radius: 12px;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out;
+}
+.cart-footer-fab:hover {
+    transform: translateY(-5px);
 }
 
-.main-content {
-  flex: 3; /* Takes up 3/4 of the space */
+.cart-summary {
+    font-weight: 500;
+}
+.cart-summary span:first-child {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: 5px;
+    margin-right: 1rem;
 }
 
-.sidebar-content {
-  flex: 1; /* Takes up 1/4 of the space */
-  margin-top: 4.5rem; /* Aligns the top of the cart with the menu list */
+.view-cart-action {
+    font-weight: 700;
+}
+
+/* --- Cart Modal --- */
+.cart-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Align modal to the bottom */
+}
+
+.cart-modal-content {
+    background-color: white;
+    width: 100%;
+    max-height: 90vh; /* Don't cover the entire screen */
+    overflow-y: auto;
+    border-radius: 20px 20px 0 0; /* Rounded top corners */
+    animation: slideUp 0.3s ease-out;
+}
+
+/* This is the CSS for the Cart component itself when it's inside the modal */
+.cart-modal-content .cart-container {
+    box-shadow: none;
+    border: none;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
 }

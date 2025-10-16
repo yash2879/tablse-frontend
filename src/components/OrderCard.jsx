@@ -19,7 +19,7 @@ const OrderCard = ({ order, onUpdateStatus }) => {
                 {order.items?.map((item, index) => (
                     <li key={index}>
                         <span className="item-quantity">{item.quantity}x</span>
-                        <span className="item-name">{item.menuItemName}</span>
+                        <span className="item-name">{item.itemName}</span>
                     </li>
                 ))}
             </ul>

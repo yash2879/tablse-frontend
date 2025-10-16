@@ -13,14 +13,17 @@
 /* Main Kanban Board Layout */
 .kanban-board {
     display: flex;
-    gap: 1.5rem; /* Space between columns */
+    gap: 1.5rem;
+    /* Space between columns */
     align-items: flex-start;
 }
 
 /* Styling for each column */
 .kanban-column {
-    flex: 1; /* Each column takes up equal space */
-    background-color: #f4f5f7; /* A light grey for the column background */
+    flex: 1;
+    /* Each column takes up equal space */
+    background-color: #f4f5f7;
+    /* A light grey for the column background */
     border-radius: 8px;
     padding: 1rem;
 }
@@ -34,8 +37,76 @@
 }
 
 .kanban-column-orders {
-    min-height: 70vh; /* Gives the columns a nice tall appearance */
+    min-height: 70vh;
+    /* Gives the columns a nice tall appearance */
     background-color: #fff;
     border-radius: 5px;
     padding: 0.5rem;
+}
+
+/* By default, hide the mobile view and show the desktop board */
+.mobile-summary {
+    display: none;
+}
+
+.desktop-only {
+    display: flex;
+    /* This is the default state for the kanban board */
+}
+
+/* A CSS Media Query: These styles ONLY apply if the screen width is 768px or less */
+@media (max-width: 768px) {
+    .kitchen-hub-container {
+        padding: 0.5rem;
+        /* Reduce padding on mobile */
+    }
+
+    /* Hide the desktop Kanban board on small screens */
+    .desktop-only {
+        display: none;
+    }
+
+    /* Show the mobile summary view on small screens */
+    .mobile-summary {
+        display: block;
+    }
+
+    .kanban-board {
+        /* We can remove this in the media query, but hiding the parent is enough */
+    }
+}
+
+/* Styling for the mobile tab interface */
+.mobile-tabs {
+    display: flex;
+    justify-content: space-around;
+    background-color: #f4f5f7;
+    padding: 0.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 0.75rem 0.5rem;
+    border: none;
+    background-color: transparent;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.tab-btn.active {
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-orders-list {
+    /* The order cards will just stack vertically here */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }

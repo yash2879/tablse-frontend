@@ -45,7 +45,8 @@
 .header-left {
     display: flex;
     align-items: center;
-    gap: 2.5rem; /* Space between the brand and the nav links */
+    gap: 2.5rem;
+    /* Space between the brand and the nav links */
 }
 
 /* Styling for the navigation section */
@@ -56,10 +57,12 @@
 
 .header-nav-link {
     text-decoration: none;
-    color: #5a5c69; /* Muted text color */
+    color: #5a5c69;
+    /* Muted text color */
     font-weight: 500;
     padding: 0.5rem 0;
-    border-bottom: 2px solid transparent; /* Prepare for the active state underline */
+    border-bottom: 2px solid transparent;
+    /* Prepare for the active state underline */
     transition: color 0.2s, border-bottom-color 0.2s;
 }
 
@@ -70,5 +73,80 @@
 /* This is the magic of NavLink: the 'active' class */
 .header-nav-link.active {
     color: var(--color-primary);
-    border-bottom-color: var(--color-primary); /* Underline the active link */
+    border-bottom-color: var(--color-primary);
+    /* Underline the active link */
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    /* Hidden by default on desktop */
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    padding: 1rem;
+}
+
+.mobile-nav {
+    display: none;
+    /* Also hidden by default */
+    flex-direction: column;
+    background-color: #fff;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* --- Media Query for Mobile --- */
+/* These styles apply when the screen is 768px or narrower */
+@media (max-width: 768px) {
+    .admin-header {
+        padding: 1rem;
+        /* Reduce padding on mobile */
+    }
+
+    .desktop-nav {
+        display: none;
+        /* Hide the desktop nav links */
+    }
+
+    .header-user-info span {
+        display: none;
+        /* Hide the "Welcome, Admin" text to save space */
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+        /* Show the hamburger button */
+    }
+
+    .header-left {
+        gap: 1rem;
+        /* Reduce space between brand and (now hidden) nav */
+    }
+
+    .mobile-nav {
+        display: flex;
+        /* Show the mobile nav dropdown when isMobileMenuOpen is true */
+    }
+
+    /* Make the links in the mobile nav take up more space */
+    .mobile-nav .header-nav-link {
+        padding: 0.75rem 1rem;
+        border-bottom: none;
+        /* Remove the underline style for mobile */
+        border-radius: 6px;
+    }
+
+    /* Active style for mobile nav is a background color, not an underline */
+    .mobile-nav .header-nav-link.active {
+        background-color: #f0f2f5;
+        color: var(--color-primary);
+    }
 }

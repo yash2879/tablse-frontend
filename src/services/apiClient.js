@@ -94,6 +94,11 @@ export const updateMenuItemAvailability = (itemId, isAvailable) => {
     });
 };
 
+export const getActiveOrders = (restaurantId) => {
+    // This requires an authenticated user, but our fetchApi helper adds the token automatically.
+    return fetchApi(`/api/orders/restaurant/${restaurantId}/active`);
+};
+
 export const getMenuItems = (restaurantId) => {
     return fetchApi(`/api/menu/${restaurantId}`);
 };

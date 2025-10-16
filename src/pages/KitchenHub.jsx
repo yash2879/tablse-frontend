@@ -5,13 +5,14 @@ import { Client } from "@stomp/stompjs";
 import OrderCard from '../components/OrderCard';
 import { useAuth } from '../context/AuthContext';
 import Notification from '../components/Notification';
-import { updateOrderStatus } from '../services/apiClient';
+import { getActiveOrders, updateOrderStatus } from '../services/apiClient';
 import './KitchenHub.css';
 
 const KitchenHub = () => {
     const [orders, setOrders] = useState([]);
     const [isConnected, setIsConnected] = useState(false);
     const [notification, setNotification] = useState(null);
+    const [activeMobileTab, setActiveMobileTab] = useState('NEW');
 
 
     // This ref will hold our single, persistent client instance
@@ -29,12 +30,29 @@ const KitchenHub = () => {
         }
 
         // --- 2. Define our connection and message handlers ---
-        const onConnect = () => {
+        const onConnect = async () => {
             setIsConnected(true);
             console.log("SUCCESS: Connected to WebSocket via STOMP!");
 
             const topic = `/topic/orders/${restaurantId}`;
             console.log(`Subscribing to topic: ${topic}`);
+
+            // Fetch initial active orders
+            try {
+                console.log("Fetching initial active orders...");
+                const initialOrders = await getActiveOrders(restaurantId);
+                // Sort orders so 'NEW' are first, then by time.
+                initialOrders.sort((a, b) => new Date(b.orderTime) - new Date(a.orderTime));
+                setOrders(initialOrders);
+                console.log("Successfully loaded initial orders:", initialOrders);
+            } catch (error) {
+                console.error("Failed to fetch initial orders:", error);
+                // Optionally set an error state here to show in the UI
+                setNotification({
+                    message: "Error: Could not load initial orders. Please refresh.",
+                    type: 'error'
+                });
+            }
 
             // Subscribe to the restaurant-specific topic
             clientRef.current.subscribe(topic, (message) => {
@@ -136,7 +154,7 @@ const KitchenHub = () => {
                 </span>
             </p>
 
-            <div className="kanban-board">
+            <div className="kanban-board desktop-only">
                 {/* column 1 */}
                 <div className="kanban-column">
                     <h2 className='kanban-column-title'>New ({newOrders.length})</h2>
@@ -180,6 +198,43 @@ const KitchenHub = () => {
                 </div>
 
                 {/* columns end */}
+            </div>
+
+            {/* --- MOBILE: Tabbed List (Visible on small screens) --- */}
+            <div className="mobile-summary mobile-only">
+                <div className="mobile-tabs">
+                    <button
+                        className={`tab-btn ${activeMobileTab === 'NEW' ? 'active' : ''}`}
+                        onClick={() => setActiveMobileTab('NEW')}
+                    >
+                        New ({newOrders.length})
+                    </button>
+                    <button
+                        className={`tab-btn ${activeMobileTab === 'PREPARING' ? 'active' : ''}`}
+                        onClick={() => setActiveMobileTab('PREPARING')}
+                    >
+                        Preparing ({preparingOrders.length})
+                    </button>
+                    <button
+                        className={`tab-btn ${activeMobileTab === 'COMPLETED' ? 'active' : ''}`}
+                        onClick={() => setActiveMobileTab('COMPLETED')}
+                    >
+                        Completed ({completedOrders.length})
+                    </button>
+                </div>
+
+                <div className="mobile-orders-list">
+                    {/* Conditionally render the list based on the active tab */}
+                    {activeMobileTab === 'NEW' && newOrders.map(order => (
+                        <OrderCard key={order.id} order={order} onUpdateStatus={handleUpdateOrderStatus} />
+                    ))}
+                    {activeMobileTab === 'PREPARING' && preparingOrders.map(order => (
+                        <OrderCard key={order.id} order={order} onUpdateStatus={handleUpdateOrderStatus} />
+                    ))}
+                    {activeMobileTab === 'COMPLETED' && completedOrders.map(order => (
+                        <OrderCard key={order.id} order={order} onUpdateStatus={handleUpdateOrderStatus} />
+                    ))}
+                </div>
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 // src/components/AdminLayout.jsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './AdminLayout.css';
@@ -8,6 +8,7 @@ import './AdminLayout.css';
 const AdminLayout = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const handleLogout = () => {
         logout();
@@ -20,18 +21,33 @@ const AdminLayout = () => {
                 <div className="header-left">
                     <Link to="/admin/dashboard" className="header-brand">TableSE Admin</Link>
 
-                    <nav className="header-nav">
+                    <nav className="header-nav desktop-nav">
                         <NavLink to="/admin/dashboard" className="header-nav-link">Dashboard</NavLink>
                         <NavLink to="/admin/menu" className="header-nav-link">Menu</NavLink>
                         <NavLink to={`/admin/kitchen/hub`} className="header-nav-link">Kitchen Hub</NavLink>
                     </nav>
                 </div>
-                <div className="header-user-info">
-                    {/* Display the username from the JWT's 'sub' (subject) claim */}
-                    <span>Welcome, {user?.sub || 'Admin'}</span>
-                    <button onClick={handleLogout} className="btn-logout">Logout</button>
+                <div className="header-right">
+                    <div className="header-user-info">
+                        {/* Display the username from the JWT's 'sub' (subject) claim */}
+                        <span>Welcome, {user?.sub || 'Admin'}</span>
+                        <button onClick={handleLogout} className="btn-logout">Logout</button>
+                    </div>
+                    
+                    <button className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                        <i className={isMobileMenuOpen ? "fas fa-times" : "fas fa-bars"}></i>
+                    </button>
                 </div>
             </header>
+
+            {isMobileMenuOpen && (
+                <nav className="mobile-nav">
+                    <NavLink to="/admin/dashboard" className="header-nav-link" onClick={() => setIsMobileMenuOpen(false)}>Dashboard</NavLink>
+                    <NavLink to="/admin/menu" className="header-nav-link" onClick={() => setIsMobileMenuOpen(false)}>Menu</NavLink>
+                    <NavLink to={`/admin/kitchen/hub`} className="header-nav-link" onClick={() => setIsMobileMenuOpen(false)}>Kitchen Hub</NavLink>
+                </nav>
+            )}
+
             <main className="admin-main-content">
                 {/* The <Outlet/> component from react-router renders the nested child route */}
                 <Outlet />

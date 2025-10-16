@@ -16,6 +16,10 @@ function CustomerMenu() {
   const restaurantId = params.restaurantId;
   const tableNumber = params.tableNumber;
 
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+  const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
@@ -27,7 +31,7 @@ function CustomerMenu() {
         setIsLoading(false);
       }
     };
-    
+
     if (restaurantId) {
       fetchMenuItems();
     }
@@ -72,7 +76,7 @@ function CustomerMenu() {
 
   const handlePlaceOrder = async () => {
     if (cart.length === 0) {
-      setNotification({message: "Your cart is empty!", type: "error"});
+      setNotification({ message: "Your cart is empty!", type: "error" });
       return;
     }
     const orderPayload = {
@@ -83,13 +87,13 @@ function CustomerMenu() {
         quantity: item.quantity
       }))
     };
-    
+
     try {
       await placeOrder(orderPayload);
-      setNotification({message: "Order placed successfully!", type: "success"});
+      setNotification({ message: "Order placed successfully!", type: "success" });
       setCart([]); // Clear cart after successful order
     } catch (error) {
-      setNotification({message: error.message, type: "error"});
+      setNotification({ message: error.message, type: "error" });
     }
   }
 
@@ -99,24 +103,18 @@ function CustomerMenu() {
 
   return (
     <>
-    <div className="notification-container">
-    {notification && 
-      <Notification 
-        notification={notification} 
-        onClose={clearNotification} 
-      />
-    }
-    </div> 
+      <div className="notification-container">
+        {notification && <Notification notification={notification} onClose={clearNotification} />}
+      </div>
 
-    <div className="app-container">
-      <div className="main-content">
+      {/* This is now a single column container */}
+      <div className="customer-menu-container">
         <h1 className="menu-title">Our Menu</h1>
-        
-        {/* CORRECTED CONDITIONAL RENDERING */}
+        <p className="table-info">Table: <strong>{tableNumber}</strong></p>
+
         {isLoading && <p className="loading-message">Loading menu...</p>}
-        
         {error && <p className="error-message">{error}</p>}
-        
+
         {!isLoading && !error && (
           <div className="menu-list">
             {menuItems.map(item => (
@@ -129,16 +127,36 @@ function CustomerMenu() {
           </div>
         )}
       </div>
-      
-      <div className="sidebar-content">
-        <Cart cartItems={cart}
-          onRemoveItem={handleRemoveItem}
-          onIncrementItem={handleIncrementItem}
-          onDecrementItem={handleDecrementItem}
-          onPlaceOrder={handlePlaceOrder}
-        />
-      </div>
-    </div>
+
+      {/* --- NEW: Cart Modal --- */}
+      {/* This modal will only be visible when isCartOpen is true */}
+      {isCartOpen && (
+        <div className="cart-modal-overlay" onClick={() => setIsCartOpen(false)}>
+          <div className="cart-modal-content" onClick={e => e.stopPropagation()}>
+            <Cart
+              cartItems={cart}
+              onRemoveItem={handleRemoveItem}
+              onIncrementItem={handleIncrementItem}
+              onDecrementItem={handleDecrementItem}
+              onPlaceOrder={handlePlaceOrder}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* --- NEW: Sticky Cart Footer/FAB --- */}
+      {/* This button is only shown if there are items in the cart */}
+      {cart.length > 0 && (
+        <div className="cart-footer-fab" onClick={() => setIsCartOpen(true)}>
+          <div className="cart-summary">
+            <span>{totalItems} item{totalItems > 1 ? 's' : ''}</span>
+            <span>Total: ₹{totalPrice.toFixed(2)}</span>
+          </div>
+          <div className="view-cart-action">
+            View Cart
+          </div>
+        </div>
+      )}
     </>
   );
 }
