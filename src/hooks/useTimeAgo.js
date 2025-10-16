@@ -7,7 +7,7 @@ const formatTimeAgo = (date) => {
     // date variable
     const now = new Date();
     // descriptive log
-    console.log(`Calculating time ago for date: ${date} (current time: ${now})`);
+    console.log(`Calculating time ago for date: ${date} (current time: ${now}) \n difference in seconds: ${(now - date) / 1000} \n difference: ${(now - date)}`);
     const seconds = Math.floor((now - date) / 1000);
     let interval = seconds / 31536000;
     if (interval > 1) return Math.floor(interval) + " years ago";
