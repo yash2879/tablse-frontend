@@ -5,6 +5,7 @@ import Notification from '../components/Notification';
 import { getMenuItems, placeOrder } from '../services/apiClient';
 import './CustomerMenu.css';
 import { useAuth } from '../context/AuthContext';
+import { useParams } from 'react-router-dom';
 
 function CustomerMenu() {
   const [menuItems, setMenuItems] = useState([]);
@@ -12,10 +13,9 @@ function CustomerMenu() {
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
   const [notification, setNotification] = useState(null);
-  const token = localStorage.getItem('authToken');
-  // get user restaurantId from token payload if possible
-  const user = useAuth();
-  const restaurantId = user ? user.restaurantId : null;
+  const params = useParams();
+  const restaurantId = params.restaurantId;
+  const tableNumber = params.tableNumber;
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -77,8 +77,8 @@ function CustomerMenu() {
       return;
     }
     const orderPayload = {
-      restaurantId: 1, // Hardcoded for now
-      tableNumber: "A1", // Hardcoded for now
+      restaurantId: restaurantId,
+      tableNumber: tableNumber,
       items: cart.map(item => ({
         menuItemId: item.id,
         quantity: item.quantity
