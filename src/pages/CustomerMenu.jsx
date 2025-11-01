@@ -26,6 +26,7 @@ function CustomerMenu() {
     // --- HOOKS for getting URL info ---
     const { restaurantId } = useParams(); // Gets 'restaurantId' from the path /menu/:restaurantId/...
     const [searchParams] = useSearchParams(); // Hook to get query parameters like '?otp=123456'
+    const [sessionId, setSessionId] = useState(null);
 
     const clientRef = useRef(null);
     
