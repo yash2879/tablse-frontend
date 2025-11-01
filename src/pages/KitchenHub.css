@@ -70,10 +70,6 @@
     .mobile-summary {
         display: block;
     }
-
-    .kanban-board {
-        /* We can remove this in the media query, but hiding the parent is enough */
-    }
 }
 
 /* Styling for the mobile tab interface */

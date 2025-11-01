@@ -37,15 +37,15 @@ const AdminDashboard = () => {
                     </Link>
                 </div>
 
-                {/* Card 3: QR Codes (Placeholder) */}
+                {/* Card 3: QR Codes */}
                 <div className="dashboard-card">
-                    <h2 className="dashboard-card__title">📱 QR Codes</h2>
+                    <h2 className="dashboard-card__title">📱 Table Management</h2>
                     <p className="dashboard-card__description">
-                        Generate and print unique QR codes for each of your tables.
+                        Manage your tables and generate their unique QR codes for ordering.
                     </p>
-                    {/* A '#' indicates a placeholder link for now */}
-                    <Link to="#" className="dashboard-card__link dashboard-card__link--disabled">
-                        Generate Codes
+                    {/* This now links to our new page */}
+                    <Link to="/admin/tables" className="dashboard-card__link">
+                        Manage Tables
                     </Link>
                 </div>
                 

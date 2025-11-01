@@ -10,6 +10,7 @@ import MenuItemForm from './pages/MenuItemForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminLayout from './components/AdminLayout';
 import RegistrationPage from './pages/RegistrationPage';
+import TableManagement from './pages/TableManagement';
 import { Navigate } from 'react-router-dom';
 import './App.css'; // Global styles
 
@@ -20,7 +21,7 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegistrationPage />} />
-      <Route path="/menu/:restaurantId/:tableNumber" element={<CustomerMenu />} />
+      <Route path="/menu/:restaurantId" element={<CustomerMenu />} />
 
       {/* Admin/Protected Routes */}
       <Route
@@ -37,6 +38,7 @@ function App() {
         <Route path="menu/new" element={<MenuItemForm />} />
         <Route path="menu/edit/:itemId" element={<MenuItemForm />} />
         <Route path="kitchen/hub" element={<KitchenHub />} />
+        <Route path="tables" element={<TableManagement />} /> 
       </Route>
 
       {/* Fallback Route */}

@@ -18,8 +18,7 @@ const logger = {
 
 // A helper function to handle fetch requests
 const fetchApi = async (path, options = {}) => {
-    // 2. Get the auth token from localStorage
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken') || localStorage.getItem('sessionToken');
 
     // 3. Set up the headers
     const headers = {
@@ -83,6 +82,19 @@ export const login = (username, password) => {
     });
 };
 
+export const authenticateTableSession = (tableId, otp) => {
+    // This API call intentionally does NOT send an existing auth token.
+    // It's the entry point for a customer.
+    return fetchApi('/api/sessions/authenticate-table', {
+        method: 'POST',
+        body: JSON.stringify({ tableId: parseInt(tableId), otp }),
+    });
+};
+
+export const getMenuItems = (restaurantId) => {
+    return fetchApi(`/api/menu/${restaurantId}`);
+};
+
 export const getAdminMenuItems = () => {
     return fetchApi('/api/admin/menu-items');
 };
@@ -92,15 +104,6 @@ export const updateMenuItemAvailability = (itemId, isAvailable) => {
         method: 'PATCH',
         body: JSON.stringify({ isAvailable }),
     });
-};
-
-export const getActiveOrders = (restaurantId) => {
-    // This requires an authenticated user, but our fetchApi helper adds the token automatically.
-    return fetchApi(`/api/orders/restaurant/${restaurantId}/active`);
-};
-
-export const getMenuItems = (restaurantId) => {
-    return fetchApi(`/api/menu/${restaurantId}`);
 };
 
 export const placeOrder = (orderPayload) => {
@@ -141,5 +144,33 @@ export const updateOrderStatus = (orderId, newStatus) => {
     });
 };
 
+export const getActiveOrders = (restaurantId) => {
+    return fetchApi(`/api/orders/restaurant/${restaurantId}/active`);
+};
+
+export const addItemToOrder = (sessionId, menuItemId, quantity) => {
+    return fetchApi(`/api/sessions/${sessionId}/items`, {
+        method: 'POST',
+        body: JSON.stringify({ menuItemId, quantity }),
+    });
+};
+
+export const removeItemFromOrder = (sessionId, menuItemId) => {
+    return fetchApi(`/api/sessions/${sessionId}/items/${menuItemId}`, {
+        method: 'DELETE',
+    });
+};
+
+export const getTables = () => {
+    // NOTE: This endpoint is assumed to exist. Confirm with the backend team.
+    return fetchApi('/api/admin/tables');
+};
+
+export const createTable = (tableName) => {
+    return fetchApi('/api/admin/tables', {
+        method: 'POST',
+        body: JSON.stringify({ name: tableName }),
+    });
+};
 // Add other API functions here as you need them...
 // e.g., updateOrderStatus, etc.

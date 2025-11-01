@@ -42,3 +42,13 @@
 .add-to-cart-btn:hover {
   opacity: 0.85;
 }
+
+.menu-item-card.disabled {
+    opacity: 0.6;
+    background-color: #f8f9fa; /* A slightly off-white, inactive look */
+}
+
+.menu-item-card.disabled .add-to-cart-btn {
+    background-color: #b7b9cc; /* A muted gray for the button */
+    cursor: not-allowed;
+}

@@ -34,7 +34,7 @@ function Cart({cartItems, onRemoveItem, onIncrementItem, onDecrementItem, onPlac
             <div className="cart-total">
                 <strong>Total: ₹{totalPrice.toFixed(2)}</strong>
             </div>
-            <button className="place-order-btn" onClick={onPlaceOrder}>Place Order</button>
+            {/* <button className="place-order-btn" onClick={onPlaceOrder}>Place Order</button> */}
             </>
         )}
         </div>
