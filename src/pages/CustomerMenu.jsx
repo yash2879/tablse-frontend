@@ -5,8 +5,9 @@ import Cart from '../components/Cart';
 import Notification from '../components/Notification';
 import { Client } from "@stomp/stompjs"; // Import the STOMP client
 import { jwtDecode } from 'jwt-decode'; // Import jwt-decode
-import { getMenuItems, authenticateTableSession, addItemToOrder, removeItemFromOrder } from '../services/apiClient'; 
+import { getMenuItems, authenticateTableSession, addItemToOrder, removeItemFromOrder, placeOrderFromSession } from '../services/apiClient'; 
 import './CustomerMenu.css';
+import { set } from 'lodash';
 
 function CustomerMenu() {
     // --- STATE MANAGEMENT ---
@@ -140,13 +141,10 @@ function CustomerMenu() {
 
     // --- EVENT HANDLERS (will be updated to use WebSockets) ---
     const handleAddToCart = async (itemToAdd) => {
-        if (!isSessionAuthenticated || !sessionId) {
-            setNotification({ message: 'Please scan a valid QR code to enable ordering.', type: 'error' });
-            return;
-        }
+        if (!isSessionAuthenticated || !sessionId) { /* ... error handling ... */ return; }
         try {
+            // This now syncs the cart for everyone at the table
             await addItemToOrder(sessionId, itemToAdd.id, 1);
-            setNotification({ message: `${itemToAdd.name} added to order!`, type: 'success' });
         } catch (err) {
             setNotification({ message: `Error: ${err.message}`, type: 'error' });
         }
@@ -177,6 +175,20 @@ function CustomerMenu() {
         // For now, we remove the whole item stack.
         await handleRemoveItem(itemId);
     };
+
+    const handlePlaceOrder = async () => {
+    // Use the session-synced cart's length
+    if (cart.length === 0) return;
+    
+    try {
+        // Call the new, simpler API function
+        await placeOrderFromSession(sessionId);
+        setNotification({ message: 'Order sent to the kitchen!', type: 'success' });
+        // DO NOT clear the cart here. The WebSocket message from the backend will do it for us.
+    } catch (err) {
+        setNotification({ message: `Error: ${err.message}`, type: 'error' });
+    }
+};
     
     // Notification auto-clear effect
     useEffect(() => {
@@ -236,6 +248,7 @@ function CustomerMenu() {
                             onRemoveItem={handleRemoveItem}
                             onIncrementItem={handleIncrementItem}
                             onDecrementItem={handleDecrementItem}
+                            onPlaceOrder={handlePlaceOrder}
                         />
                     </div>
                 </div>

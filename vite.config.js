@@ -7,5 +7,9 @@ export default defineConfig({
   // ADD THIS 'define' SECTION
   define: {
     'global': {},
-  }
+  },
+  server: {
+    host: '0.0.0.0',
+    port: 8081,
+  },
 })

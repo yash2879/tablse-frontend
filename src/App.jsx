@@ -11,6 +11,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminLayout from './components/AdminLayout';
 import RegistrationPage from './pages/RegistrationPage';
 import TableManagement from './pages/TableManagement';
+import SettingsPage from './pages/SettingsPage';
 import { Navigate } from 'react-router-dom';
 import './App.css'; // Global styles
 
@@ -38,7 +39,8 @@ function App() {
         <Route path="menu/new" element={<MenuItemForm />} />
         <Route path="menu/edit/:itemId" element={<MenuItemForm />} />
         <Route path="kitchen/hub" element={<KitchenHub />} />
-        <Route path="tables" element={<TableManagement />} /> 
+        <Route path="tables" element={<TableManagement />} />
+        <Route path="settings" element={<SettingsPage />} />
       </Route>
 
       {/* Fallback Route */}

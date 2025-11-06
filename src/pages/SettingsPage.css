@@ -1,0 +1,68 @@
+/*
+ * We can reuse many styles from MenuItemForm.css, so we keep this minimal.
+ * The .form-container class is already styled globally or in other files.
+*/
+
+.settings-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.settings-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.settings-form input[type="text"],
+.settings-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.settings-form input[type="text"]:focus,
+.settings-form textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.25);
+}
+
+.settings-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1.5rem;
+}
+
+/* Reusing the .btn-save class from MenuItemForm.css */
+.btn-save {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.btn-save:disabled {
+    background-color: #b7b9cc;
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: #e74a3b;
+    font-weight: bold;
+    text-align: center;
+    padding: 1rem;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+}

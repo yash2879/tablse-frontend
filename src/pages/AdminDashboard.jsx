@@ -55,7 +55,7 @@ const AdminDashboard = () => {
                     <p className="dashboard-card__description">
                         Update your restaurant's name, address, and other details.
                     </p>
-                    <Link to="#" className="dashboard-card__link dashboard-card__link--disabled">
+                    <Link to="/admin/settings" className="dashboard-card__link">
                         Edit Settings
                     </Link>
                 </div>

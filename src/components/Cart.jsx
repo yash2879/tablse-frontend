@@ -18,15 +18,15 @@ function Cart({cartItems, onRemoveItem, onIncrementItem, onDecrementItem, onPlac
             <> 
             <ul className="cart-items-list">
                 {cartItems.map(item => (
-                    <li key={item.id} className="cart-item">
-                        <span className="item-name">{item.name}</span>
+                    <li key={item.menuItemId} className="cart-item">
+                        <span className="item-name">{item.itemName}</span>
                         <div className="item-controls">
-                            <button className="decrement-btn" onClick={() => onDecrementItem(item.id)}>-</button>
+                            <button className="decrement-btn" onClick={() => onDecrementItem(item.menuItemId)}>-</button>
                             <span className="item-quantity">{item.quantity}</span>
-                            <button className="increment-btn" onClick={() => onIncrementItem(item.id)}>+</button>
+                            <button className="increment-btn" onClick={() => onIncrementItem(item.menuItemId)}>+</button>
                         </div>
                         <span className="item-subtotal">₹{(item.price * item.quantity).toFixed(2)}</span>
-                        <button className="remove-btn" onClick={() => onRemoveItem(item.id)}>Remove</button>
+                        <button className="remove-btn" onClick={() => onRemoveItem(item.menuItemId)}>Remove</button>
                     </li>
                 ))}
             </ul>
@@ -34,7 +34,7 @@ function Cart({cartItems, onRemoveItem, onIncrementItem, onDecrementItem, onPlac
             <div className="cart-total">
                 <strong>Total: ₹{totalPrice.toFixed(2)}</strong>
             </div>
-            {/* <button className="place-order-btn" onClick={onPlaceOrder}>Place Order</button> */}
+            <button className="place-order-btn" onClick={onPlaceOrder}>Add to Table's Order</button>
             </>
         )}
         </div>

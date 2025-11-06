@@ -18,16 +18,26 @@ const logger = {
 
 // A helper function to handle fetch requests
 const fetchApi = async (path, options = {}) => {
-    const token = localStorage.getItem('authToken') || localStorage.getItem('sessionToken');
+
+    const { sendAuth = true, tokenType = 'any', ...restOptions } = options;
+
+    let token;
+    if (tokenType === 'session') {
+        token = localStorage.getItem('sessionToken');
+    } else if (tokenType === 'admin') {
+        token = localStorage.getItem('authToken');
+    } else { // Default 'any' case for general authenticated routes
+        token = localStorage.getItem('authToken') || localStorage.getItem('sessionToken');
+    }
 
     // 3. Set up the headers
     const headers = {
         'Content-Type': 'application/json',
-        ...options.headers, // Allow overriding headers if needed
+        ...restOptions.headers, // Allow overriding headers if needed
     };
 
     // If a token exists, add the Authorization header
-    if (token) {
+    if (token && sendAuth) {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
@@ -36,7 +46,7 @@ const fetchApi = async (path, options = {}) => {
 
     // 4. Construct the full URL and make the request
     const response = await fetch(`${API_BASE_URL}${path}`, {
-        ...options,
+        ...restOptions,
         headers,
     });
 
@@ -55,10 +65,11 @@ const fetchApi = async (path, options = {}) => {
         case 204: // No Content
             responseData = null;
             break;
+        case 200: // OK
         case 201: // Created
             responseData = await response.json().catch(() => null);
             break;
-        default:  // 200 OK and others
+        default:  // 202 Accepted and others
             responseData = await response.json();
     }
 
@@ -88,11 +99,14 @@ export const authenticateTableSession = (tableId, otp) => {
     return fetchApi('/api/sessions/authenticate-table', {
         method: 'POST',
         body: JSON.stringify({ tableId: parseInt(tableId), otp }),
+        sendAuth: false,
     });
 };
 
 export const getMenuItems = (restaurantId) => {
-    return fetchApi(`/api/menu/${restaurantId}`);
+    return fetchApi(`/api/menu/${restaurantId}`, {
+        sendAuth: false,
+    });
 };
 
 export const getAdminMenuItems = () => {
@@ -106,10 +120,11 @@ export const updateMenuItemAvailability = (itemId, isAvailable) => {
     });
 };
 
-export const placeOrder = (orderPayload) => {
-    return fetchApi('/api/orders', {
+export const placeOrderFromSession = (sessionId) => {
+    return fetchApi(`/api/orders/from-session`, {
         method: 'POST',
-        body: JSON.stringify(orderPayload),
+        body: JSON.stringify({ sessionId: sessionId }),
+        tokenType: 'session',
     });
 };
 
@@ -152,12 +167,14 @@ export const addItemToOrder = (sessionId, menuItemId, quantity) => {
     return fetchApi(`/api/sessions/${sessionId}/items`, {
         method: 'POST',
         body: JSON.stringify({ menuItemId, quantity }),
+        tokenType: 'session',
     });
 };
 
 export const removeItemFromOrder = (sessionId, menuItemId) => {
     return fetchApi(`/api/sessions/${sessionId}/items/${menuItemId}`, {
         method: 'DELETE',
+        tokenType: 'session',
     });
 };
 
@@ -170,6 +187,17 @@ export const createTable = (tableName) => {
     return fetchApi('/api/admin/tables', {
         method: 'POST',
         body: JSON.stringify({ name: tableName }),
+    });
+};
+
+export const getRestaurantDetails = () => {
+    return fetchApi('/api/admin/restaurant');
+};
+
+export const updateRestaurantDetails = (detailsData) => {
+    return fetchApi('/api/admin/restaurant', {
+        method: 'PUT',
+        body: JSON.stringify(detailsData),
     });
 };
 // Add other API functions here as you need them...

@@ -118,9 +118,9 @@ const KitchenHub = () => {
         }
     }, [notification]);
 
-    const newOrders = orders.filter(order => order.status === 'NEW');
     const preparingOrders = orders.filter(order => order.status === 'PREPARING');
     const completedOrders = orders.filter(order => order.status === 'COMPLETED');
+    const newOrders = orders.filter(order => order.status !== 'PREPARING' && order.status !== 'COMPLETED');
 
     const handleUpdateOrderStatus = async (orderId, newStatus) => {
         console.log(`Requesting status update for order ${orderId} to ${newStatus}`);
