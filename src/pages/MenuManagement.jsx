@@ -164,6 +164,7 @@ const MenuManagement = () => {
                     <table>
                         <thead>
                             <tr>
+                                <th>Image</th>
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Price</th>
@@ -174,6 +175,16 @@ const MenuManagement = () => {
                         <tbody>
                             {filteredMenuItems.map(item => (
                                 <tr key={item.id}>
+                                    <td>
+                                        {/* 2. Add the image cell */}
+                                        <div className="table-image-container">
+                                            {item.imageUrl ? (
+                                                <img src={item.imageUrl} alt={item.name} />
+                                            ) : (
+                                                <span className="no-image-text"></span>
+                                            )}
+                                        </div>
+                                    </td>
                                     <td>{item.id}</td>
                                     <td>{item.name}</td>
                                     <td>₹{item.price.toFixed(2)}</td>

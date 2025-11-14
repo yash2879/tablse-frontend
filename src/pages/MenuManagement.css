@@ -239,3 +239,20 @@ tbody tr:hover {
     }
     
 }
+
+.table-image-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    background-color: #f8f9fc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.table-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

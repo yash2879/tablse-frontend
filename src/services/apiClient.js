@@ -6,7 +6,11 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 // Logger utility
 const logger = {
     request: (method, path, body) => {
-        console.log(`🚀 API Request: ${method} ${path}${body ? `\nBody: ${JSON.stringify(body, null, 2)}` : ''}`);
+        if (body) {
+            console.log(`🚀 API Request: ${method} ${path}\nBody:`, body);
+        } else {
+            console.log(`🚀 API Request: ${method} ${path}`);
+        }
     },
     response: (method, path, response) => {
         console.log(`✅ API Response: ${method} ${path}\nResponse:`, response);
@@ -31,10 +35,17 @@ const fetchApi = async (path, options = {}) => {
     }
 
     // 3. Set up the headers
-    const headers = {
-        'Content-Type': 'application/json',
-        ...restOptions.headers, // Allow overriding headers if needed
-    };
+    const headers = { ...restOptions.headers };
+    let body = restOptions.body;
+
+    // If the body is NOT FormData, handle it as JSON.
+    // Otherwise, let the browser handle the Content-Type for file uploads.
+    if (!(body instanceof FormData)) {
+        headers['Content-Type'] = 'application/json';
+        if (body) {
+            body = JSON.stringify(body);
+        }
+    }
 
     // If a token exists, add the Authorization header
     if (token && sendAuth) {
@@ -42,12 +53,13 @@ const fetchApi = async (path, options = {}) => {
     }
 
     // Log the request
-    logger.request(options.method || 'GET', path, options.body ? JSON.parse(options.body) : null);
+    logger.request(options.method || 'GET', path, options.body);
 
     // 4. Construct the full URL and make the request
     const response = await fetch(`${API_BASE_URL}${path}`, {
         ...restOptions,
         headers,
+        body,
     });
 
     // 5. Handle non-ok responses
@@ -82,14 +94,14 @@ const fetchApi = async (path, options = {}) => {
 export const register = (registrationData) => {
     return fetchApi('/api/auth/register', {
         method: 'POST',
-        body: JSON.stringify(registrationData),
+        body: registrationData,
     });
 };
 
 export const login = (username, password) => {
     return fetchApi('/api/auth/login', {
         method: 'POST',
-        body: JSON.stringify({ username, password }),
+        body: { username, password },
     });
 };
 
@@ -98,7 +110,7 @@ export const authenticateTableSession = (tableId, otp) => {
     // It's the entry point for a customer.
     return fetchApi('/api/sessions/authenticate-table', {
         method: 'POST',
-        body: JSON.stringify({ tableId: parseInt(tableId), otp }),
+        body: { tableId: parseInt(tableId), otp },
         sendAuth: false,
     });
 };
@@ -116,14 +128,14 @@ export const getAdminMenuItems = () => {
 export const updateMenuItemAvailability = (itemId, isAvailable) => {
     return fetchApi(`/api/admin/menu-items/${itemId}/availability`, {
         method: 'PATCH',
-        body: JSON.stringify({ isAvailable }),
+        body: { isAvailable },
     });
 };
 
 export const placeOrderFromSession = (sessionId) => {
     return fetchApi(`/api/orders/from-session`, {
         method: 'POST',
-        body: JSON.stringify({ sessionId: sessionId }),
+        body: { sessionId: sessionId },
         tokenType: 'session',
     });
 };
@@ -141,21 +153,21 @@ export const getMenuItem = (itemId) => {
 export const createMenuItem = (menuItemData) => {
     return fetchApi('/api/admin/menu-items', {
         method: 'POST',
-        body: JSON.stringify(menuItemData),
+        body: menuItemData,
     });
 };
 
 export const updateMenuItem = (itemId, menuItemData) => {
     return fetchApi(`/api/admin/menu-items/${itemId}`, {
         method: 'PUT',
-        body: JSON.stringify(menuItemData),
+        body: menuItemData,
     });
 };
 
 export const updateOrderStatus = (orderId, newStatus) => {
     return fetchApi(`/api/orders/${orderId}/status`, {
         method: 'PATCH',
-        body: JSON.stringify({ newStatus }),
+        body: { newStatus },
     });
 };
 
@@ -166,7 +178,7 @@ export const getActiveOrders = (restaurantId) => {
 export const addItemToOrder = (sessionId, menuItemId, quantity) => {
     return fetchApi(`/api/sessions/${sessionId}/items`, {
         method: 'POST',
-        body: JSON.stringify({ menuItemId, quantity }),
+        body: { menuItemId, quantity },
         tokenType: 'session',
     });
 };
@@ -186,7 +198,7 @@ export const getTables = () => {
 export const createTable = (tableName) => {
     return fetchApi('/api/admin/tables', {
         method: 'POST',
-        body: JSON.stringify({ name: tableName }),
+        body: { name: tableName },
     });
 };
 
@@ -197,8 +209,21 @@ export const getRestaurantDetails = () => {
 export const updateRestaurantDetails = (detailsData) => {
     return fetchApi('/api/admin/restaurant', {
         method: 'PUT',
-        body: JSON.stringify(detailsData),
+        body: detailsData,
     });
 };
+
+export const uploadMenuItemImage = (itemId, imageFile) => {
+    const formData = new FormData();
+    formData.append('file', imageFile);
+
+    return fetchApi(`/api/admin/menu-items/${itemId}/media/image`, {
+        method: 'POST',
+        // We pass the FormData object directly. Our helper will handle it.
+        body: formData,
+        tokenType: 'admin', // Ensure we use the admin token
+    });
+};
+
 // Add other API functions here as you need them...
 // e.g., updateOrderStatus, etc.
