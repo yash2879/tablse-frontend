@@ -68,3 +68,53 @@
     cursor: not-allowed;
 }
 
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+    /* Default max-width for standard modals */
+}
+
+/* 1. Make the cropper modal wider to better accommodate images */
+.modal-content--cropper {
+    max-width: fit-content;
+}
+
+/* 2. This is the container for the ReactCrop component */
+.modal-body .ReactCrop {
+    max-height: 70vh;
+    /* Set a maximum height relative to the viewport height */
+    overflow: hidden;
+    /* Hide any parts of the image that might overflow this container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    /* A light background for the crop area */
+
+    position: relative;
+}
+
+/* 3. This is the key fix: Constrain the image *inside* the cropper */
+.modal-body .ReactCrop .ReactCrop__image {
+    max-height: 70vh;
+    /* CRITICAL: Ensure the image itself doesn't exceed the container's max height */
+    width: auto;
+    /* Allow the width to adjust to maintain the aspect ratio */
+}

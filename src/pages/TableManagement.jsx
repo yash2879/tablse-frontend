@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getTables, createTable } from '../services/apiClient'; // We will add these
+import { getTables, createTable, getTableDetails } from '../services/apiClient'; // We will add these
 import './TableManagement.css'; // We will create this CSS file later
 
 const TableManagement = () => {
@@ -8,6 +8,9 @@ const TableManagement = () => {
     const [error, setError] = useState(null);
     const [baseUrl, setBaseUrl] = useState('');
 
+    const [selectedTable, setSelectedTable] = useState(null);
+    const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+    const [infoModalError, setInfoModalError] = useState(null);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [newTableName, setNewTableName] = useState('');
     const [newlyCreatedTable, setNewlyCreatedTable] = useState(null);
@@ -17,7 +20,7 @@ const TableManagement = () => {
         const loadTables = async () => {
             setIsLoading(true);
             try {
-                const tablesData = await getTables(); 
+                const tablesData = await getTables();
                 setTables(tablesData);
             } catch (err) {
                 setError(err.message);
@@ -54,6 +57,24 @@ const TableManagement = () => {
 
     const handleCloseSecretModal = () => {
         setNewlyCreatedTable(null);
+    };
+
+    const handleOpenInfoModal = async (tableId) => {
+        setIsInfoModalOpen(true);
+        setSelectedTable(null); // Reset previous data
+        setInfoModalError(null);
+        try {
+            const tableDetails = await getTableDetails(tableId);
+            setSelectedTable(tableDetails);
+        } catch (err) {
+            setInfoModalError("Could not load table details. Please try again.");
+        }
+    };
+
+    const handleCloseInfoModal = () => {
+        setIsInfoModalOpen(false);
+        setSelectedTable(null);
+        setInfoModalError(null);
     };
 
     if (isLoading) return <p>Loading tables...</p>;
@@ -100,7 +121,7 @@ const TableManagement = () => {
                         </div>
                         <div className="modal-body">
                             <p>To set up the e-ink device for "<strong>{newlyCreatedTable.name}</strong>", connect to its setup WiFi and enter the following details on the configuration page.</p>
-                            
+
                             <div className="provisioning-info-item">
                                 <label>Base URL</label>
                                 <div className="info-box">
@@ -120,6 +141,46 @@ const TableManagement = () => {
                         </div>
                         <div className="modal-footer">
                             <button onClick={handleCloseSecretModal} className="btn-primary">Done</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {isInfoModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            {/* The title will show loading text until the data arrives */}
+                            <h5>{selectedTable ? `Provisioning Info for "${selectedTable.name}"` : 'Loading...'}</h5>
+                            <button onClick={handleCloseInfoModal} className="modal-close-btn">&times;</button>
+                        </div>
+                        <div className="modal-body">
+                            {infoModalError ? (
+                                <p className="error-message">{infoModalError}</p>
+                            ) : !selectedTable ? (
+                                <p>Fetching table details...</p>
+                            ) : (
+                                <>
+                                    <p>Use these details to set up a new or reset e-ink device for this table.</p>
+                                    <div className="provisioning-info-item">
+                                        <label>Base URL</label>
+                                        <div className="info-box">
+                                            <span>{`${baseUrl}/menu/${selectedTable.restaurantId}?table=${selectedTable.id}`}</span>
+                                            <button onClick={() => navigator.clipboard.writeText(`${baseUrl}/menu/${selectedTable.restaurantId}?table=${selectedTable.id}`)}>Copy</button>
+                                        </div>
+                                    </div>
+                                    <div className="provisioning-info-item">
+                                        <label>Secret Key</label>
+                                        <div className="info-box">
+                                            <span>{selectedTable.secretKey}</span>
+                                            <button onClick={() => navigator.clipboard.writeText(selectedTable.secretKey)}>Copy</button>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                        <div className="modal-footer">
+                            <button onClick={handleCloseInfoModal} className="btn-primary">Close</button>
                         </div>
                     </div>
                 </div>
@@ -151,15 +212,25 @@ const TableManagement = () => {
                                     <td>{table.name}</td>
                                     <td>
                                         {/* We can add buttons for actions later */}
-                                        <button className="action-btn btn-view-qr" title="View QR Info">
+                                        <button
+                                            onClick={() => handleOpenInfoModal(table.id)}
+                                            className="action-btn btn-view-qr"
+                                            title="View QR Info"
+                                        >
                                             <i className="fas fa-qrcode"></i>
                                         </button>
                                     </td>
                                 </tr>
                             ))}
+                            {tables.length === 0 && (
+                                <tr>
+                                    <td colSpan="3" className="empty-table-message">
+                                        No tables found. Click "Add New Table" to get started.
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
-                    {tables.length === 0 && <p className="no-tables-message">No tables found. Click "Add New Table" to get started.</p>}
                 </div>
             </div>
         </>

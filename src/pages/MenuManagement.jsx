@@ -196,7 +196,11 @@ const MenuManagement = () => {
                                     </td>
                                     <td>
                                         <div className="action-buttons">
-                                            <button className="action-btn btn-edit" title="Edit">
+                                            <button
+                                                className="action-btn btn-edit"
+                                                title="Edit"
+                                                onClick={() => window.location.href = `/admin/menu/edit/${item.id}`}
+                                            >
                                                 <i className="fas fa-pen"></i>
                                             </button>
                                             <button
@@ -210,6 +214,14 @@ const MenuManagement = () => {
                                     </td>
                                 </tr>
                             ))}
+
+                            {filteredMenuItems.length === 0 && (
+                                <tr>
+                                    <td colSpan="6" className="empty-table-message">
+                                        No menu items found. Click "Add New Item" to get started.
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>

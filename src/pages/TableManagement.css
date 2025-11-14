@@ -37,7 +37,8 @@
 
 /* Button to view QR info in the table */
 .btn-view-qr {
-    background-color: #36b9cc; /* A nice teal/cyan color */
+    background-color: #36b9cc;
+    /* A nice teal/cyan color */
 }
 
 /* Ensure action-btn base styles are available if not global */
@@ -97,4 +98,30 @@
 .important-note {
     font-size: 0.9rem;
     color: var(--color-text-secondary);
+}
+
+.empty-state-container {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.empty-state-container p {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin: 0 0 0.5rem;
+}
+
+.empty-state-container span {
+    color: var(--color-text-secondary);
+}
+
+.empty-column-message {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    font-size: 0.9rem;
 }

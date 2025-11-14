@@ -225,5 +225,11 @@ export const uploadMenuItemImage = (itemId, imageFile) => {
     });
 };
 
+export const getTableDetails = (tableId) => {
+    return fetchApi(`/api/admin/tables/${tableId}`, {
+        tokenType: 'admin', // Ensure we use the admin token
+    });
+};
+
 // Add other API functions here as you need them...
 // e.g., updateOrderStatus, etc.

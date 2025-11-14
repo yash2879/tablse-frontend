@@ -13,6 +13,7 @@ const KitchenHub = () => {
     const [isConnected, setIsConnected] = useState(false);
     const [notification, setNotification] = useState(null);
     const [activeMobileTab, setActiveMobileTab] = useState('NEW');
+    const [isLoading, setIsLoading] = useState(true);
 
 
     // This ref will hold our single, persistent client instance
@@ -52,6 +53,8 @@ const KitchenHub = () => {
                     message: "Error: Could not load initial orders. Please refresh.",
                     type: 'error'
                 });
+            } finally {
+                setIsLoading(false);
             }
 
             // Subscribe to the restaurant-specific topic
@@ -154,51 +157,62 @@ const KitchenHub = () => {
                 </span>
             </p>
 
-            <div className="kanban-board desktop-only">
-                {/* column 1 */}
-                <div className="kanban-column">
-                    <h2 className='kanban-column-title'>New ({newOrders.length})</h2>
-                    <div className="kanban-column-orders">
-                        {newOrders.map(order => (
-                            <OrderCard
-                                key={order.id}
-                                order={order}
-                                onUpdateStatus={handleUpdateOrderStatus}
-                            />
-                        ))}
-                    </div>
+            {isLoading ? (
+                <p className="loading-message">Loading active orders...</p>
+            ) : orders.length === 0 ? (
+                // 4. If not loading and there are no orders, show a friendly message
+                <div className="empty-state-container">
+                    <p>No active orders right now.</p>
+                    <span>New orders will appear here automatically.</span>
                 </div>
-
-                {/* column 2 */}
-                <div className="kanban-column">
-                    <h2 className='kanban-column-title'>Preparing ({preparingOrders.length})</h2>
-                    <div className="kanban-column-orders">
-                        {preparingOrders.map(order => (
-                            <OrderCard
-                                key={order.id}
-                                order={order}
-                                onUpdateStatus={handleUpdateOrderStatus}
-                            />
-                        ))}
+            ) : (
+                <div className="kanban-board desktop-only">
+                    {/* column 1 */}
+                    <div className="kanban-column">
+                        <h2 className='kanban-column-title'>New ({newOrders.length})</h2>
+                        <div className="kanban-column-orders">
+                            {newOrders.map(order => (
+                                <OrderCard
+                                    key={order.id}
+                                    order={order}
+                                    onUpdateStatus={handleUpdateOrderStatus}
+                                />
+                            ))}
+                        </div>
                     </div>
-                </div>
 
-                {/* column 3 */}
-                <div className="kanban-column">
-                    <h2 className='kanban-column-title'>Completed ({completedOrders.length})</h2>
-                    <div className="kanban-column-orders">
-                        {completedOrders.map(order => (
-                            <OrderCard
-                                key={order.id}
-                                order={order}
-                                onUpdateStatus={handleUpdateOrderStatus}
-                            />
-                        ))}
+                    {/* column 2 */}
+                    <div className="kanban-column">
+                        <h2 className='kanban-column-title'>Preparing ({preparingOrders.length})</h2>
+                        <div className="kanban-column-orders">
+                            {preparingOrders.map(order => (
+                                <OrderCard
+                                    key={order.id}
+                                    order={order}
+                                    onUpdateStatus={handleUpdateOrderStatus}
+                                />
+                            ))}
+                        </div>
                     </div>
-                </div>
 
-                {/* columns end */}
-            </div>
+                    {/* column 3 */}
+                    <div className="kanban-column">
+                        <h2 className='kanban-column-title'>Completed ({completedOrders.length})</h2>
+                        <div className="kanban-column-orders">
+                            {completedOrders.map(order => (
+                                <OrderCard
+                                    key={order.id}
+                                    order={order}
+                                    onUpdateStatus={handleUpdateOrderStatus}
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* columns end */}
+                </div>
+            )}
+
 
             {/* --- MOBILE: Tabbed List (Visible on small screens) --- */}
             <div className="mobile-summary mobile-only">

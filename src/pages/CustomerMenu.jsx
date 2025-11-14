@@ -5,7 +5,7 @@ import Cart from '../components/Cart';
 import Notification from '../components/Notification';
 import { Client } from "@stomp/stompjs"; // Import the STOMP client
 import { jwtDecode } from 'jwt-decode'; // Import jwt-decode
-import { getMenuItems, authenticateTableSession, addItemToOrder, removeItemFromOrder, placeOrderFromSession } from '../services/apiClient'; 
+import { getMenuItems, authenticateTableSession, addItemToOrder, removeItemFromOrder, placeOrderFromSession } from '../services/apiClient';
 import './CustomerMenu.css';
 import { set } from 'lodash';
 
@@ -13,7 +13,7 @@ function CustomerMenu() {
     // --- STATE MANAGEMENT ---
     const [menuItems, setMenuItems] = useState([]);
     const [cart, setCart] = useState([]); // This will now be controlled by the WebSocket
-    
+
     // New state for session management
     const [isSessionAuthenticated, setIsSessionAuthenticated] = useState(false);
     const [sessionToken, setSessionToken] = useState(null);
@@ -29,15 +29,17 @@ function CustomerMenu() {
     const [searchParams] = useSearchParams(); // Hook to get query parameters like '?otp=123456'
     const [sessionId, setSessionId] = useState(null);
 
+    const [isCartPulsing, setIsCartPulsing] = useState(false);
+
     const clientRef = useRef(null);
-    
+
     // --- CORE AUTHENTICATION AND DATA FETCHING EFFECT ---
     useEffect(() => {
         // This function runs once when the component mounts
         const initializeSessionAndMenu = async () => {
             setIsLoadingMenu(true);
             setError(null);
-            
+
             try {
                 // Step 1: Always fetch the public menu. This can happen in parallel.
                 const menuDataPromise = getMenuItems(restaurantId);
@@ -145,6 +147,7 @@ function CustomerMenu() {
         try {
             // This now syncs the cart for everyone at the table
             await addItemToOrder(sessionId, itemToAdd.id, 1);
+            triggerCartPulse();
         } catch (err) {
             setNotification({ message: `Error: ${err.message}`, type: 'error' });
         }
@@ -163,9 +166,19 @@ function CustomerMenu() {
     const handleIncrementItem = async (itemId) => {
         try {
             await addItemToOrder(sessionId, itemId, 1);
+            triggerCartPulse();
         } catch (err) {
             setNotification({ message: `Error: ${err.message}`, type: 'error' });
         }
+    };
+
+    const triggerCartPulse = () => {
+        setIsCartPulsing(true);
+        // Remove the animation class after it has finished (600ms)
+        // so it can be triggered again on the next click.
+        setTimeout(() => {
+            setIsCartPulsing(false);
+        }, 600);
     };
 
     // The API doesn't have a decrement endpoint, so this will remove the item completely.
@@ -177,19 +190,19 @@ function CustomerMenu() {
     };
 
     const handlePlaceOrder = async () => {
-    // Use the session-synced cart's length
-    if (cart.length === 0) return;
-    
-    try {
-        // Call the new, simpler API function
-        await placeOrderFromSession(sessionId);
-        setNotification({ message: 'Order sent to the kitchen!', type: 'success' });
-        // DO NOT clear the cart here. The WebSocket message from the backend will do it for us.
-    } catch (err) {
-        setNotification({ message: `Error: ${err.message}`, type: 'error' });
-    }
-};
-    
+        // Use the session-synced cart's length
+        if (cart.length === 0) return;
+
+        try {
+            // Call the new, simpler API function
+            await placeOrderFromSession(sessionId);
+            setNotification({ message: 'Order sent to the kitchen!', type: 'success' });
+            // DO NOT clear the cart here. The WebSocket message from the backend will do it for us.
+        } catch (err) {
+            setNotification({ message: `Error: ${err.message}`, type: 'error' });
+        }
+    };
+
     // Notification auto-clear effect
     useEffect(() => {
         // If there's a notification, set a timer to clear it
@@ -215,16 +228,21 @@ function CustomerMenu() {
         <>
             <div className="notification-container">
                 {notification && <Notification notification={notification} onClose={clearNotification} />}
-            </div> 
+            </div>
 
             <div className="customer-menu-container">
                 {/* The header now shows the error state clearly */}
                 <h1 className="menu-title">Our Menu</h1>
                 {error && <p className="session-error-message">{error}</p>}
-                
+
                 {isLoadingMenu && <p className="loading-message">Loading...</p>}
 
-                {!isLoadingMenu && (
+                {!isLoadingMenu &&
+                    menuItems.length === 0 ? (
+                    <p className="empty-state-container">
+                        This menu is currently empty. Please check back later.
+                    </p>
+                ) : (
                     <div className="menu-list">
                         {menuItems.map(item => (
                             <MenuItemCard
@@ -232,19 +250,19 @@ function CustomerMenu() {
                                 item={item}
                                 onAddToCart={handleAddToCart}
                                 // Pass down the disabled state to the card
-                                isDisabled={!isSessionAuthenticated} 
+                                isDisabled={!isSessionAuthenticated}
                             />
                         ))}
                     </div>
                 )}
             </div>
-      
+
             {/* The modal and FAB are now controlled by the session status */}
             {isSessionAuthenticated && isCartOpen && (
                 <div className="cart-modal-overlay" onClick={() => setIsCartOpen(false)}>
                     <div className="cart-modal-content" onClick={e => e.stopPropagation()}>
-                        <Cart 
-                            cartItems={cart} 
+                        <Cart
+                            cartItems={cart}
                             onRemoveItem={handleRemoveItem}
                             onIncrementItem={handleIncrementItem}
                             onDecrementItem={handleDecrementItem}
@@ -255,7 +273,10 @@ function CustomerMenu() {
             )}
 
             {isSessionAuthenticated && cart.length > 0 && (
-                <div className="cart-footer-fab" onClick={() => setIsCartOpen(true)}>
+                <div
+                    className={`cart-footer-fab ${isCartPulsing ? 'pulse' : ''}`}
+                    onClick={() => setIsCartOpen(true)}
+                >
                     <div className="cart-summary">
                         <span>{totalItems} item{totalItems > 1 ? 's' : ''}</span>
                         <span>Total: ₹{totalPrice.toFixed(2)}</span>

@@ -256,3 +256,36 @@ tbody tr:hover {
     height: 100%;
     object-fit: cover;
 }
+
+.empty-state-container {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: var(--color-surface);
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.empty-state-container p {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin: 0 0 0.5rem;
+}
+
+.empty-state-container span {
+    color: var(--color-text-secondary);
+}
+
+.empty-column-message {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.empty-table-message {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-text-secondary);
+    font-style: italic; 
+}
