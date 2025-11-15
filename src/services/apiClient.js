@@ -55,38 +55,57 @@ const fetchApi = async (path, options = {}) => {
     // Log the request
     logger.request(options.method || 'GET', path, options.body);
 
-    // 4. Construct the full URL and make the request
-    const response = await fetch(`${API_BASE_URL}${path}`, {
-        ...restOptions,
-        headers,
-        body,
-    });
+    try {
+        // 4. Construct the full URL and make the request
+        const response = await fetch(`${API_BASE_URL}${path}`, {
+            ...restOptions,
+            headers,
+            body,
+        });
 
-    // 5. Handle non-ok responses
-    if (!response.ok) {
-        // Try to parse the error message from the backend, or use a default
-        const errorData = await response.json().catch(() => ({ message: response.statusText }));
-        const error = new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+        // 5. Handle non-ok responses
+        if (!response.ok) {
+            // Try to parse the error message from the backend, or use a default
+            const errorData = await response.json().catch(() => ({ message: response.statusText }));
+            const error = new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+            error.status = response.status;
+            throw error;
+        }
+
+        let responseData;
+        // Handle different successful status codes
+        switch (response.status) {
+            case 204: // No Content
+                responseData = null;
+                break;
+            case 200: // OK
+            case 201: // Created
+                responseData = await response.json().catch(() => null);
+                break;
+            default:  // 202 Accepted and others
+                responseData = await response.json();
+        }
+
+        logger.response(options.method || 'GET', path, responseData);
+        return responseData;
+    } catch (error) {
         logger.error(options.method || 'GET', path, error);
+
+        // --- THIS IS THE GLOBAL INTERCEPTOR LOGIC ---
+        if (error.status === 401 || error.status === 403) {
+            console.log("Authentication error detected. Logging out and redirecting.");
+            // Clear any invalid tokens
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('sessionToken');
+            // Force a redirect to the login page. A full page load is good here
+            // as it clears all application state.
+            window.location.href = '/login';
+        }
+        // --- END OF INTERCEPTOR LOGIC ---
+
+        // Re-throw the error so individual components can still handle it if needed
         throw error;
     }
-
-    let responseData;
-    // Handle different successful status codes
-    switch (response.status) {
-        case 204: // No Content
-            responseData = null;
-            break;
-        case 200: // OK
-        case 201: // Created
-            responseData = await response.json().catch(() => null);
-            break;
-        default:  // 202 Accepted and others
-            responseData = await response.json();
-    }
-
-    logger.response(options.method || 'GET', path, responseData);
-    return responseData;
 };
 
 // --- Define your API methods ---
@@ -95,6 +114,7 @@ export const register = (registrationData) => {
     return fetchApi('/api/auth/register', {
         method: 'POST',
         body: registrationData,
+        sendAuth: false,
     });
 };
 
@@ -102,6 +122,7 @@ export const login = (username, password) => {
     return fetchApi('/api/auth/login', {
         method: 'POST',
         body: { username, password },
+        sendAuth: false,
     });
 };
 

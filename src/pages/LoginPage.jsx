@@ -1,6 +1,6 @@
 // src/pages/LoginPage.jsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './LoginPage.css'; // We'll create this CSS file
@@ -16,6 +16,12 @@ const LoginPage = () => {
     const { login } = useAuth();
 
     const from = location.state?.from?.pathname || '/admin/dashboard';
+
+    useEffect(() => {
+        // When the login page mounts, clear any existing tokens to ensure a clean slate.
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('sessionToken');
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
